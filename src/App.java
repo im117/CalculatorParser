@@ -1,12 +1,11 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        if (args.length == 0) {
-            throw new RuntimeException("an argument must be specified");
-        }
-        expression = args[0];
+        expression = Files.readString(Path.of("input.txt"));
         nextSymbol();
         while (symbol != null) {
             System.out.println(symbol.name());
@@ -20,12 +19,11 @@ public class App {
     private static Symbol symbol;
 
     private static void nextSymbol() {
-        // the symbol will be changes soon anyways. if no sym is found, leave at null when exiting
-        symbol = null;
-
-
-        // do not try to scan if end of string is reached
-        if (scanIndex >= expression.length()) return;
+        // do not try to scan and set symbol to null if end of string is reached
+        if (scanIndex >= expression.length()) {
+            symbol = null;
+            return;
+        }
 
         // skip any leading whitespace
         Matcher whitespaceMatcher = Pattern.compile("\\s+", Pattern.MULTILINE).matcher(expression);
@@ -38,24 +36,28 @@ public class App {
         if (expression.charAt(scanIndex) == '+') {
             symbol = Symbol.PLUS;
             scanIndex++;
+            return;
         }
 
         // check for minus
         if (expression.charAt(scanIndex) == '-') {
             symbol = Symbol.MINUS;
             scanIndex++;
+            return;
         }
 
         // check for times
         if (expression.charAt(scanIndex) == '*') {
             symbol = Symbol.TIMES;
             scanIndex++;
+            return;
         }
 
         // check for slash
         if (expression.charAt(scanIndex) == '/') {
             symbol = Symbol.SLASH;
             scanIndex++;
+            return;
         }
 
         // check for number
@@ -63,11 +65,10 @@ public class App {
         if (numberMatcher.find(scanIndex) && numberMatcher.start() == scanIndex) {
             symbol = Symbol.NUMBER;
             scanIndex = numberMatcher.end();
+            return;
         }
 
+        // if nothing was matched to a symbol, but there was something found, then throw an error:
+        throw new RuntimeException("Unexpected character: " + expression.charAt(scanIndex));
     }
-
-
-
-    
 }
