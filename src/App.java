@@ -20,7 +20,8 @@ public class App {
     private static Symbol symbol;
 
     private static void nextSymbol() {
-        // the symbol will be changes soon anyways. if no sym is found, leave at null when exiting
+
+        // set symbol to null, which will be kept if nothing is found
         symbol = null;
 
 
@@ -38,24 +39,28 @@ public class App {
         if (expression.charAt(scanIndex) == '+') {
             symbol = Symbol.PLUS;
             scanIndex++;
+            return;
         }
 
         // check for minus
         if (expression.charAt(scanIndex) == '-') {
             symbol = Symbol.MINUS;
             scanIndex++;
+            return;
         }
 
         // check for times
         if (expression.charAt(scanIndex) == '*') {
             symbol = Symbol.TIMES;
             scanIndex++;
+            return;
         }
 
         // check for slash
         if (expression.charAt(scanIndex) == '/') {
             symbol = Symbol.SLASH;
             scanIndex++;
+            return;
         }
 
         // check for number
@@ -63,11 +68,7 @@ public class App {
         if (numberMatcher.find(scanIndex) && numberMatcher.start() == scanIndex) {
             symbol = Symbol.NUMBER;
             scanIndex = numberMatcher.end();
+            return;
         }
-
     }
-
-
-
-    
 }

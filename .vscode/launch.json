@@ -10,7 +10,7 @@
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "args": ["   23 23+1"]
+            "args": ["34   23 23+-**/ 001 -0e5"]
         },
         {
             "type": "java",
