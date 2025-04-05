@@ -1,0 +1,1 @@
+public enum Symbol {PLUS, MINUS, TIMES, SLASH, NUMBER}
