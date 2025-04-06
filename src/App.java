@@ -82,7 +82,7 @@ public class App {
 
 
 
-    // code adapted from 
+    // code adapted from https://en.wikipedia.org/wiki/Recursive_descent_parser#C_implementation
     private static boolean accept(Symbol s) {
         if (symbol == s) {
             nextSymbol();
