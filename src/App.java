@@ -8,7 +8,11 @@ public class App {
         expression = Files.readString(Path.of("input.txt"));
         nextSymbol();
         while (symbol != null) {
-            System.out.println(symbol.name());
+            System.out.print(symbol.name());
+            if (symbol == Symbol.NUMBER) {
+                System.out.print(" " + scannedNumber);
+            }
+            System.out.println();
             nextSymbol();
         };
         System.out.println("Hello, World!");
@@ -16,6 +20,7 @@ public class App {
 
     private static String expression;
     private static int scanIndex = 0;
+    private static int scannedNumber = -1;
     private static Symbol symbol;
 
     private static void nextSymbol() {
@@ -65,10 +70,12 @@ public class App {
         if (numberMatcher.find(scanIndex) && numberMatcher.start() == scanIndex) {
             symbol = Symbol.NUMBER;
             scanIndex = numberMatcher.end();
+            scannedNumber = Integer.parseInt(expression.substring(numberMatcher.start(), numberMatcher.end()));
             return;
         }
 
         // if nothing was matched to a symbol, but there was something found, then throw an error:
         throw new RuntimeException("Unexpected character: " + expression.charAt(scanIndex));
     }
+
 }
