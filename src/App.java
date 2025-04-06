@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class App {
     public static void main(String[] args) throws Exception {
         expression = Files.readString(Path.of("input.txt"));
-        nextSymbol();
+        /*nextSymbol();
         while (symbol != null) {
             System.out.print(symbol.name());
             if (symbol == Symbol.NUMBER) {
@@ -14,8 +14,10 @@ public class App {
             }
             System.out.println();
             nextSymbol();
-        };
-        System.out.println("Hello, World!");
+        };*/
+        nextSymbol();
+        Expression exp = expression();
+        System.out.println(exp);
     }
 
     private static String expression;
@@ -78,4 +80,55 @@ public class App {
         throw new RuntimeException("Unexpected character: " + expression.charAt(scanIndex));
     }
 
+
+
+    // code adapted from 
+    private static boolean accept(Symbol s) {
+        if (symbol == s) {
+            nextSymbol();
+            return true;
+        }
+        return false;
+    }
+
+    private static void expect(Symbol s) {
+        if (!accept(s)) {
+            throw new RuntimeException("Did not find expected token: " + s.name());
+        } 
+    }
+
+
+    private static Expression expression() {
+        Expression exp = new Expression();
+        exp.terms.add(term(false)); // scan non-negative term
+        while (symbol == Symbol.PLUS || symbol == Symbol.MINUS) {
+            boolean negate = (symbol == Symbol.MINUS);
+            nextSymbol();
+            Term term = term(negate);
+            exp.terms.add(term);
+        }
+
+        return exp;
+    }
+
+    private static Term term(boolean negative) {
+        Term term = new Term(negative);
+        expect(Symbol.NUMBER);
+        term.factors.add(new Factor(false, scannedNumber));
+        while (symbol == Symbol.TIMES || symbol == Symbol.SLASH) {
+            boolean divide = (symbol == Symbol.SLASH);
+
+            nextSymbol();
+
+            // read a new numbers
+            expect(Symbol.NUMBER);
+
+            Factor factor = new Factor(divide, scannedNumber);
+
+
+            term.factors.add(factor);
+        }
+
+        return term;
+    }
 }
